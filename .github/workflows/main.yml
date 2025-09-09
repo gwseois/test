@@ -1,18 +1,38 @@
-name: '오늘 16시55분 알림'
+# 워크플로우 이름
+name: '매일 16시 55분 마감일 알림'
 
 on:
   schedule:
-    - cron: '28 8 9 9 *'  # 2025년 9월 9일 17:28 KST (UTC 08:28)
+    # 매일 오후 5시 31분(KST)에 실행되도록 cron 스케줄 수정 (UTC 기준 07:55)
+    - cron: '31 8 * * *'
+  
+  # 수동으로 테스트할 수 있도록 workflow_dispatch 추가 (선택 사항)
+  workflow_dispatch:
 
 jobs:
   reminder:
     runs-on: ubuntu-latest
+
+    # 중요: 액션이 프로젝트를 읽고 이슈에 댓글을 달 수 있도록 권한을 추가합니다.
+    permissions:
+      issues: write
+      projects: read
+
     steps:
-      - name: Check duedate and write a comment
+      - name: 마감일 확인 및 댓글 작성
         uses: petrandr/duedate_reminders@v2
         with:
+          # GitHub 토큰은 그대로 사용합니다.
           gh_token: ${{ secrets.GITHUB_TOKEN }}
+
+          # 실제 존재하는 프로젝트 번호인지 확인하세요.
           project_number: 2
+
+          # 알림을 받을 조건 (만료가 임박한 이슈)
           notify_for: "expiring_issues"
+
+          # 프로젝트에 설정된 마감일 필드 이름 (대소문자, 공백 포함 정확해야 함)
           duedate_field_name: "Due Date"
+          
+          # 알림 방식 (이슈에 댓글)
           notification_type: "comment"
