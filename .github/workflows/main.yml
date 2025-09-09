@@ -2,14 +2,14 @@ name: '오늘 16시55분 알림'
 
 on:
   schedule:
-    - cron: '48 7 9 9 *'  # 2025년 9월 9일 16:48 KST (UTC 07:48)
+    - cron: '28 8 9 9 *'  # 2025년 9월 9일 17:28 KST (UTC 08:28)
 
 jobs:
   reminder:
     runs-on: ubuntu-latest
     steps:
       - name: Check duedate and write a comment
-        uses: petrandr/duedate_reminders@latest
+        uses: petrandr/duedate_reminders@v2
         with:
           gh_token: ${{ secrets.GITHUB_TOKEN }}
           project_number: 2
